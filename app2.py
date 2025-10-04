@@ -1098,40 +1098,134 @@ def main():
                     st.markdown(href, unsafe_allow_html=True)
                     st.markdown("</div>", unsafe_allow_html=True)
                     
-                    # Enhanced Charts
+                    # Enhanced Charts with Attractive Styling
                     col1, col2 = st.columns(2)
                     
                     with col1:
                         st.subheader("**📈 Predicted Field Distribution**")
                         field_counts = user_df['Predicted_Field'].value_counts()
-                        fig = px.pie(values=field_counts.values, names=field_counts.index, 
-                                   title='Career Fields Distribution',
-                                   color_discrete_sequence=px.colors.qualitative.Bold)
-                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                                        font_color='white')
+                        
+                        # Custom vibrant color palette
+                        colors = ['#FF4B4B', '#00C48C', '#FFD700', '#9C27B0', '#00BCD4', '#FF6B6B', '#4ECDC4', '#FFA500']
+                        
+                        fig = px.pie(values=field_counts.values, 
+                                   names=field_counts.index, 
+                                   title='<b>Career Fields Distribution</b>',
+                                   hole=0.4,  # Donut chart
+                                   color_discrete_sequence=colors)
+                        
+                        fig.update_traces(
+                            textposition='outside',
+                            textinfo='percent+label',
+                            marker=dict(line=dict(color='#000000', width=2)),
+                            pull=[0.1 if i == 0 else 0 for i in range(len(field_counts))],  # Pull out largest slice
+                            hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>'
+                        )
+                        
+                        fig.update_layout(
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            font=dict(color='white', size=13, family='Arial Black'),
+                            title_font=dict(size=18, color='#FF4B4B'),
+                            showlegend=True,
+                            legend=dict(
+                                orientation="v",
+                                yanchor="middle",
+                                y=0.5,
+                                xanchor="left",
+                                x=1.1,
+                                bgcolor='rgba(30, 33, 48, 0.8)',
+                                bordercolor='#FF4B4B',
+                                borderwidth=2
+                            ),
+                            margin=dict(l=20, r=150, t=60, b=20),
+                            height=450
+                        )
+                        
                         st.plotly_chart(fig, use_container_width=True)
                         st.markdown("</div>", unsafe_allow_html=True)
                     
                     with col2:
                         st.subheader("**📊 User Experience Level**")
                         level_counts = user_df['User_level'].value_counts()
-                        fig = px.pie(values=level_counts.values, names=level_counts.index,
-                                   title="Experience Levels Distribution",
-                                   color_discrete_sequence=px.colors.qualitative.Set2)
-                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                                        font_color='white')
+                        
+                        # Gradient color scheme for experience levels
+                        exp_colors = ['#00C48C', '#FFD700', '#FF4B4B', '#9C27B0']
+                        
+                        fig = px.pie(values=level_counts.values, 
+                                   names=level_counts.index,
+                                   title="<b>Experience Levels Distribution</b>",
+                                   hole=0.4,  # Donut chart
+                                   color_discrete_sequence=exp_colors)
+                        
+                        fig.update_traces(
+                            textposition='outside',
+                            textinfo='percent+label',
+                            marker=dict(line=dict(color='#000000', width=2)),
+                            pull=[0.1, 0, 0, 0],  # Pull out first slice
+                            hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>'
+                        )
+                        
+                        fig.update_layout(
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            font=dict(color='white', size=13, family='Arial Black'),
+                            title_font=dict(size=18, color='#00C48C'),
+                            showlegend=True,
+                            legend=dict(
+                                orientation="v",
+                                yanchor="middle",
+                                y=0.5,
+                                xanchor="left",
+                                x=1.1,
+                                bgcolor='rgba(30, 33, 48, 0.8)',
+                                bordercolor='#00C48C',
+                                borderwidth=2
+                            ),
+                            margin=dict(l=20, r=150, t=60, b=20),
+                            height=450
+                        )
+                        
                         st.plotly_chart(fig, use_container_width=True)
                         st.markdown("</div>", unsafe_allow_html=True)
                     
-                    # Score distribution chart
+                    # Score distribution chart with enhanced styling
                     st.subheader("**📊 ATS Score Distribution**")
                     user_df['resume_score_num'] = pd.to_numeric(user_df['resume_score'], errors='coerce')
+                    
                     fig = px.histogram(user_df, x='resume_score_num', nbins=20,
-                                     title='Distribution of Resume Scores',
+                                     title='<b>Distribution of Resume Scores</b>',
                                      labels={'resume_score_num': 'ATS Score'},
                                      color_discrete_sequence=['#FF4B4B'])
-                    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                                    font_color='white', showlegend=False)
+                    
+                    fig.update_traces(
+                        marker=dict(
+                            line=dict(color='#000000', width=1.5),
+                            opacity=0.9
+                        ),
+                        hovertemplate='<b>Score Range: %{x}</b><br>Count: %{y}<extra></extra>'
+                    )
+                    
+                    fig.update_layout(
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(30, 33, 48, 0.5)',
+                        font=dict(color='white', size=12),
+                        title_font=dict(size=18, color='#FF4B4B'),
+                        showlegend=False,
+                        xaxis=dict(
+                            title='<b>ATS Score</b>',
+                            gridcolor='rgba(255, 255, 255, 0.1)',
+                            showgrid=True
+                        ),
+                        yaxis=dict(
+                            title='<b>Number of Users</b>',
+                            gridcolor='rgba(255, 255, 255, 0.1)',
+                            showgrid=True
+                        ),
+                        bargap=0.1,
+                        height=400
+                    )
+                    
                     st.plotly_chart(fig, use_container_width=True)
                     st.markdown("</div>", unsafe_allow_html=True)
                     
