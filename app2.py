@@ -47,8 +47,8 @@ except:
 
 # ==================== Configuration ====================
 st.set_page_config(
-    page_title="Resumate AI - ML Resume Analyzer",
-    page_icon="🎯",
+    page_title="Resumate AI ",
+    page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -107,6 +107,12 @@ st.markdown("""
         text-align: center;
         box-shadow: 0 8px 20px rgba(255, 75, 75, 0.2);
         transition: all 0.3s ease;
+        width: 100%;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     
     .metric-card:hover {
@@ -121,6 +127,11 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+        line-height: 1.1;
+        max-width: 100%;
     }
     
     .metric-label {
@@ -619,27 +630,46 @@ def main():
         img = Image.open(logo_path)
         st.image(img)
     except:
-        st.title("🎯 AI Resume Analyzer")
+        # Enhanced centered title with proper design
+        st.markdown("""
+            <div style="text-align: center; padding: 3rem 0; margin-bottom: 2rem;">
+                <h1 style="
+                    font-size: 3.5rem; 
+                    font-weight: 800; 
+                    background: linear-gradient(135deg, #FF4B4B 0%, #ff8080 50%, #00C48C 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    margin: 0;
+                    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                    letter-spacing: 2px;
+                "> AI Resume Analyzer</h1>
+                <p style="
+                    font-size: 1.3rem; 
+                    color: #a0a0a0; 
+                    margin: 1rem 0 0 0;
+                    font-weight: 300;
+                    letter-spacing: 1px;
+                ">Transform Your Career with Intelligent Resume Analysis</p>
+                <div style="
+                    width: 100px; 
+                    height: 4px; 
+                    background: linear-gradient(135deg, #FF4B4B 0%, #00C48C 100%);
+                    margin: 1.5rem auto;
+                    border-radius: 2px;
+                "></div>
+            </div>
+        """, unsafe_allow_html=True)
     
     st.sidebar.markdown("# Choose Something...")
     activities = ["User", "Feedback", "About", "Admin"]
     choice = st.sidebar.selectbox("Choose among the given options:", activities)
     
-    link = '<b>Built with 🤖 by <a href="" style="text-decoration: none; color: #FF4B4B;">Team Resumate AI</a></b>'
+    link = '<b>Built with 🤍 by <a href="" style="text-decoration: none; color: #FF4B4B;">Team Resumate AI</a></b>'
     st.sidebar.markdown(link, unsafe_allow_html=True)
     
 # ==================== User Page ====================
     if choice == 'User':
-        # Hero Section
-        st.markdown("""
-            <div style='text-align: center; padding: 2rem 0;'>
-                <h1 style='font-size: 2.5rem; background: linear-gradient(135deg, #FF4B4B 0%, #ff8080 100%); 
-                -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;'>
-                Transform Your Resume with AI
-                </h1>
-                <p style='font-size: 1.2rem; color: #a0a0a0;'>Upload your resume and get instant ML-powered insights with dynamic ATS scoring</p>
-            </div>
-        """, unsafe_allow_html=True)
         
         # Progress Tracker
         if 'user_step' not in st.session_state:
@@ -1270,73 +1300,213 @@ def main():
     
     # ==================== About Section ====================
     elif choice == 'About':
-        st.title("ℹ️ About Resumate AI")
-        
+        # Enhanced About Section Header
         st.markdown("""
-            <div class='stCard'>
-                <h2>🎯 What is Resumate AI?</h2>
-                <p style='font-size: 1.1rem; line-height: 1.8;'>
+            <div style="text-align: center; padding: 3rem 0; margin-bottom: 3rem;">
+                <h1 style="
+                    font-size: 3.5rem; 
+                    font-weight: 800; 
+                    background: linear-gradient(135deg, #FF4B4B 0%, #ff8080 50%, #00C48C 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    margin: 0;
+                    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                    letter-spacing: 2px;
+                ">ℹ️ About Resumate AI</h1>
+                <p style="
+                    font-size: 1.3rem; 
+                    color: #a0a0a0; 
+                    margin: 1rem 0 0 0;
+                    font-weight: 300;
+                    letter-spacing: 1px;
+                ">Discover the Power of AI-Driven Resume Analysis</p>
+                <div style="
+                    width: 100px; 
+                    height: 4px; 
+                    background: linear-gradient(135deg, #FF4B4B 0%, #00C48C 100%);
+                    margin: 1.5rem auto;
+                    border-radius: 2px;
+                "></div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # Hero Introduction Card
+        st.markdown("""
+            <div style="
+                background: linear-gradient(135deg, #1e2130 0%, #262b3d 100%);
+                padding: 3rem;
+                border-radius: 20px;
+                border: 2px solid #FF4B4B;
+                margin-bottom: 3rem;
+                box-shadow: 0 15px 35px rgba(255, 75, 75, 0.2);
+                text-align: center;
+            ">
+                <div style="font-size: 4rem; margin-bottom: 1.5rem;">🎯</div>
+                <h2 style="
+                    color: #FF4B4B; 
+                    font-size: 2.5rem; 
+                    margin-bottom: 1.5rem;
+                    font-weight: 700;
+                ">What is Resumate AI?</h2>
+                <p style="
+                    font-size: 1.3rem; 
+                    line-height: 1.8; 
+                    color: #e0e0e0;
+                    margin: 0;
+                    max-width: 800px;
+                    margin: 0 auto;
+                ">
                 Resumate AI is an intelligent resume analyzer powered by advanced machine learning algorithms. 
                 It helps job seekers optimize their resumes with dynamic, content-quality based scoring and 
-                provides personalized recommendations for career growth.</p>
+                provides personalized recommendations for career growth.
+                </p>
             </div>
         """, unsafe_allow_html=True)
         
         col1, col2 = st.columns(2)
         
         with col1:
+            # Enhanced ML Algorithms Section
             st.markdown("""
-                <div class='stCard'>
-                    <h3 style='text-align: center; color: #FF4B4B; margin-bottom: 2rem;'>🤖 ML Algorithms Used</h3>
+                <div style="
+                    background: linear-gradient(135deg, #1e2130 0%, #262b3d 100%);
+                    padding: 2.5rem;
+                    border-radius: 20px;
+                    border: 2px solid #FF4B4B;
+                    margin-bottom: 2rem;
+                    box-shadow: 0 10px 25px rgba(255, 75, 75, 0.15);
+                ">
+                    <h3 style="
+                        text-align: center; 
+                        color: #FF4B4B; 
+                        margin-bottom: 2rem; 
+                        font-size: 2rem;
+                        font-weight: 700;
+                    ">🤖 ML Algorithms Used</h3>
                 </div>
             """, unsafe_allow_html=True)
             
-            # Algorithm Cards
-            st.markdown("""
-                <div style='background: linear-gradient(135deg, #262730 0%, #1a1d24 100%); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #FF4B4B; margin-bottom: 1rem;'>
-                    <h4 style='color: #FF4B4B; margin: 0 0 0.5rem 0; font-size: 1.1rem;'>1. TF-IDF Vectorization</h4>
-                    <p style='color: #a0a0a0; margin: 0; line-height: 1.5;'>Converts resume text into numerical features by measuring term frequency-inverse document frequency. This helps in quantifying the importance of skills and keywords.</p>
-                </div>
-            """, unsafe_allow_html=True)
+            # Algorithm Cards with enhanced styling
+            algorithms = [
+                {
+                    "title": "TF-IDF Vectorization",
+                    "icon": "🔍",
+                    "color": "#FF4B4B",
+                    "description": "Converts resume text into numerical features by measuring term frequency-inverse document frequency. This helps in quantifying the importance of skills and keywords."
+                },
+                {
+                    "title": "Naive Bayes Classification", 
+                    "icon": "🧠",
+                    "color": "#00C48C",
+                    "description": "A probabilistic classifier that predicts career fields based on skills mentioned in resumes. Uses training data from multiple technical domains to achieve high accuracy."
+                },
+                {
+                    "title": "Cosine Similarity",
+                    "icon": "📊", 
+                    "color": "#FFD700",
+                    "description": "Measures similarity between resume content and job descriptions for accurate job matching. Provides percentage match scores for better job recommendations."
+                },
+                {
+                    "title": "Content Quality Analysis",
+                    "icon": "⚡",
+                    "color": "#9C27B0", 
+                    "description": "Our enhanced algorithm analyzes not just presence of sections but also their depth, quality, and completeness to provide dynamic scores."
+                }
+            ]
             
-            st.markdown("""
-                <div style='background: linear-gradient(135deg, #262730 0%, #1a1d24 100%); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #00C48C; margin-bottom: 1rem;'>
-                    <h4 style='color: #00C48C; margin: 0 0 0.5rem 0; font-size: 1.1rem;'>2. Naive Bayes Classification</h4>
-                    <p style='color: #a0a0a0; margin: 0; line-height: 1.5;'>A probabilistic classifier that predicts career fields based on skills mentioned in resumes. Uses training data from multiple technical domains to achieve high accuracy.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("""
-                <div style='background: linear-gradient(135deg, #262730 0%, #1a1d24 100%); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #FFD700; margin-bottom: 1rem;'>
-                    <h4 style='color: #FFD700; margin: 0 0 0.5rem 0; font-size: 1.1rem;'>3. Cosine Similarity</h4>
-                    <p style='color: #a0a0a0; margin: 0; line-height: 1.5;'>Measures similarity between resume content and job descriptions for accurate job matching. Provides percentage match scores for better job recommendations.</p>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("""
-                <div style='background: linear-gradient(135deg, #262730 0%, #1a1d24 100%); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9C27B0; margin-bottom: 1rem;'>
-                    <h4 style='color: #9C27B0; margin: 0 0 0.5rem 0; font-size: 1.1rem;'>4. Content Quality Analysis</h4>
-                    <p style='color: #a0a0a0; margin: 0; line-height: 1.5;'>Our enhanced algorithm analyzes not just presence of sections but also their depth, quality, and completeness to provide dynamic scores.</p>
-                </div>
-            """, unsafe_allow_html=True)
+            for i, algo in enumerate(algorithms, 1):
+                st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #262730 0%, #1a1d24 100%); 
+                        padding: 2rem; 
+                        border-radius: 15px; 
+                        border-left: 5px solid {algo['color']}; 
+                        margin-bottom: 1.5rem;
+                        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+                        transition: transform 0.3s ease;
+                    ">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 2rem; margin-right: 1rem;">{algo['icon']}</span>
+                            <h4 style="
+                                color: {algo['color']}; 
+                                margin: 0; 
+                                font-size: 1.3rem;
+                                font-weight: 600;
+                            ">{i}. {algo['title']}</h4>
+                        </div>
+                        <p style="
+                            color: #e0e0e0; 
+                            margin: 0; 
+                            line-height: 1.6; 
+                            font-size: 1rem;
+                        ">{algo['description']}</p>
+                    </div>
+                """, unsafe_allow_html=True)
         
         with col2:
+            # Enhanced Key Features Section
             st.markdown("""
-                <div class='stCard'>
-                    <h3>✨ Key Features</h3>
-                    <ul style='font-size: 1rem; line-height: 2;'>
-                        <li><b>Dynamic ATS Scoring:</b> Content quality-based scoring (0-100)</li>
-                        <li><b>Instant PDF Display:</b> View your resume immediately</li>
-                        <li><b>Career Field Prediction:</b> ML-powered field identification</li>
-                        <li><b>Smart Skill Extraction:</b> Automatic detection of technical skills</li>
-                        <li><b>Skill Recommendations:</b> Personalized skill suggestions</li>
-                        <li><b>Live Job Search:</b> Real-time job recommendations with match scores</li>
-                        <li><b>Video Learning:</b> Curated YouTube tutorials for your field</li>
-                        <li><b>Detailed Feedback:</b> Section-wise analysis with improvement tips</li>
-                        <li><b>Analytics Dashboard:</b> Admin panel with user insights</li>
-                    </ul>
+                <div style="
+                    background: linear-gradient(135deg, #1e2130 0%, #262b3d 100%);
+                    padding: 2.5rem;
+                    border-radius: 20px;
+                    border: 2px solid #00C48C;
+                    margin-bottom: 2rem;
+                    box-shadow: 0 10px 25px rgba(0, 196, 140, 0.15);
+                ">
+                    <h3 style="
+                        text-align: center; 
+                        color: #00C48C; 
+                        margin-bottom: 2rem; 
+                        font-size: 2rem;
+                        font-weight: 700;
+                    ">✨ Key Features</h3>
                 </div>
             """, unsafe_allow_html=True)
+            
+            # Feature cards with icons
+            features = [
+                {"icon": "🎯", "title": "Dynamic ATS Scoring", "desc": "Content quality-based scoring (0-100)"},
+                {"icon": "📄", "title": "Instant PDF Display", "desc": "View your resume immediately"},
+                {"icon": "🔮", "title": "Career Field Prediction", "desc": "ML-powered field identification"},
+                {"icon": "🧠", "title": "Smart Skill Extraction", "desc": "Automatic detection of technical skills"},
+                {"icon": "💡", "title": "Skill Recommendations", "desc": "Personalized skill suggestions"},
+                {"icon": "🔍", "title": "Live Job Search", "desc": "Real-time job recommendations with match scores"},
+                {"icon": "🎥", "title": "Video Learning", "desc": "Curated YouTube tutorials for your field"},
+                {"icon": "📊", "title": "Detailed Feedback", "desc": "Section-wise analysis with improvement tips"},
+                {"icon": "📈", "title": "Analytics Dashboard", "desc": "Admin panel with user insights"}
+            ]
+            
+            for feature in features:
+                st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #262730 0%, #1a1d24 100%); 
+                        padding: 1.5rem; 
+                        border-radius: 12px; 
+                        border-left: 4px solid #00C48C; 
+                        margin-bottom: 1rem;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                        transition: transform 0.3s ease;
+                    ">
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-size: 1.5rem; margin-right: 1rem;">{feature['icon']}</span>
+                            <div>
+                                <h4 style="
+                                    color: #00C48C; 
+                                    margin: 0 0 0.5rem 0; 
+                                    font-size: 1.1rem;
+                                    font-weight: 600;
+                                ">{feature['title']}</h4>
+                                <p style="
+                                    color: #b0b0b0; 
+                                    margin: 0; 
+                                    font-size: 0.95rem;
+                                ">{feature['desc']}</p>
+                            </div>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
         
         st.markdown("""
             <div class='stCard'>
@@ -1563,11 +1733,13 @@ def main():
             # Welcome message with animation
             st.markdown("""
                 <div class='success-message'>
-                    <h2>🎉 Welcome, Administrator!</h2>
+                    <h2>🎉 Welcome, Admin !!</h2>
                     <p>You have full access to all analytics and data management tools</p>
                 </div>
             """, unsafe_allow_html=True)
             
+            # Add spacing between welcome message and cards
+            st.markdown("<br><br>", unsafe_allow_html=True)
         
         # Show login form if not logged in
         else:            
@@ -1674,7 +1846,6 @@ def main():
                 if len(user_df) == 0:
                     st.warning("No user data available yet. Upload some resumes first!")
                 else:
-                    st.success(f"✅ Welcome Admin! Total {len(user_df)} users have used our tool")
                     
                     # Enhanced Summary Statistics
                     col1, col2, col3, col4 = st.columns(4)
@@ -1700,7 +1871,7 @@ def main():
                         top_field = user_df['Predicted_Field'].mode()[0] if len(user_df) > 0 else 'N/A'
                         st.markdown(f"""
                             <div class='metric-card'>
-                                <div class='metric-value' style='font-size: 1.5rem;'>{top_field}</div>
+                                <div class='metric-value'>{top_field}</div>
                                 <div class='metric-label'>Top Field</div>
                             </div>
                         """, unsafe_allow_html=True)
