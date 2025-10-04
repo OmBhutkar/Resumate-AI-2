@@ -1375,52 +1375,296 @@ def main():
     
 # ==================== Admin Section ====================
     else:
-        st.title("👨‍💼 Admin Panel")
-        st.markdown("Manage and analyze user data with advanced analytics")
+        # Custom CSS for enhanced interactivity
+        st.markdown("""
+            <style>
+            /* Animated gradient background for admin section */
+            .admin-header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 2rem;
+                border-radius: 15px;
+                margin-bottom: 2rem;
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+                animation: gradientShift 3s ease infinite;
+            }
+            
+            @keyframes gradientShift {
+                0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+                50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
+            }
+            
+            .admin-header h1 {
+                color: white;
+                margin: 0;
+                font-size: 2.5rem;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            }
+            
+            .admin-header p {
+                color: rgba(255,255,255,0.9);
+                margin: 0.5rem 0 0 0;
+                font-size: 1.1rem;
+            }
+            
+            /* Login card styling */
+            .login-card {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                padding: 2.5rem;
+                margin: 2rem auto;
+                max-width: 600px;
+                box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .login-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            }
+            
+            /* Animated info box */
+            .info-box {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                padding: 1.5rem;
+                border-radius: 15px;
+                margin-top: 1.5rem;
+                border-left: 5px solid #fff;
+                animation: pulse 2s ease-in-out infinite;
+                box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+            }
+            
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+            }
+            
+            .info-box h4 {
+                color: white;
+                margin-top: 0;
+                font-size: 1.2rem;
+            }
+            
+            .info-box p {
+                color: rgba(255,255,255,0.95);
+                margin: 0.5rem 0;
+                font-size: 1rem;
+            }
+            
+            /* Stats cards */
+            .stat-card {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 1.5rem;
+                border-radius: 15px;
+                color: white;
+                text-align: center;
+                margin: 1rem 0;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            }
+            
+            .stat-card:hover {
+                transform: translateY(-10px) scale(1.05);
+                box-shadow: 0 15px 30px rgba(102, 126, 234, 0.5);
+            }
+            
+            .stat-card h3 {
+                font-size: 2.5rem;
+                margin: 0.5rem 0;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            }
+            
+            .stat-card p {
+                margin: 0;
+                opacity: 0.9;
+                font-size: 1.1rem;
+            }
+            
+            /* Success message styling */
+            .success-message {
+                background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+                color: white;
+                padding: 1rem;
+                border-radius: 10px;
+                text-align: center;
+                animation: slideInDown 0.5s ease;
+                box-shadow: 0 5px 15px rgba(56, 239, 125, 0.3);
+            }
+            
+            @keyframes slideInDown {
+                from {
+                    transform: translateY(-100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            
+            /* Loading animation */
+            .loading-dots {
+                display: inline-block;
+            }
+            
+            .loading-dots span {
+                animation: blink 1.4s infinite;
+                animation-fill-mode: both;
+            }
+            
+            .loading-dots span:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+            
+            .loading-dots span:nth-child(3) {
+                animation-delay: 0.4s;
+            }
+            
+            @keyframes blink {
+                0%, 80%, 100% { opacity: 0; }
+                40% { opacity: 1; }
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        # Animated header
+        st.markdown("""
+            <div class='admin-header'>
+                <h1>👨‍💼 Admin Panel</h1>
+                <p>Manage and analyze user data with advanced analytics</p>
+            </div>
+        """, unsafe_allow_html=True)
         
         # Initialize session state for admin login
         if 'admin_logged_in' not in st.session_state:
             st.session_state.admin_logged_in = False
+        if 'login_attempts' not in st.session_state:
+            st.session_state.login_attempts = 0
+        if 'show_hint' not in st.session_state:
+            st.session_state.show_hint = False
         
         # Show logout button if logged in
         if st.session_state.admin_logged_in:
-            col_logout1, col_logout2 = st.columns([5, 1])
+            col_logout1, col_logout2, col_logout3 = st.columns([4, 1, 1])
             with col_logout2:
-                if st.button('🚪 Logout', type="secondary"):
-                    st.session_state.admin_logged_in = False
+                if st.button('🔄 Refresh', type="secondary", use_container_width=True):
                     st.rerun()
+            with col_logout3:
+                if st.button('🚪 Logout', type="primary", use_container_width=True):
+                    st.session_state.admin_logged_in = False
+                    st.session_state.login_attempts = 0
+                    st.session_state.show_hint = False
+                    st.success("👋 Logged out successfully!")
+                    time.sleep(1)
+                    st.rerun()
+            
+            # Welcome message with animation
+            st.markdown("""
+                <div class='success-message'>
+                    <h2>🎉 Welcome, Administrator!</h2>
+                    <p>You have full access to all analytics and data management tools</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
         
         # Show login form if not logged in
-        if not st.session_state.admin_logged_in:
-            col1, col2 = st.columns([2, 1])
+        else:            
+            st.markdown("### 🔐 Secure Login")
+            st.markdown("Enter your credentials to access the admin dashboard")
+            
+            # Progress indicator for login attempts
+            if st.session_state.login_attempts > 0:
+                progress_text = f"Login attempts: {st.session_state.login_attempts}/3"
+                progress_value = st.session_state.login_attempts / 3
+                st.progress(progress_value, text=progress_text)
+            
+            col1, col2 = st.columns([1, 1])
             
             with col1:
-                ad_user = st.text_input("Username", placeholder="Enter username", key="admin_user")
+                ad_user = st.text_input(
+                    "Username", 
+                    placeholder="Enter username", 
+                    key="admin_user",
+                    help="Enter your admin username"
+                )
             with col2:
-                ad_password = st.text_input("Password", type='password', placeholder="Enter password", key="admin_pass")
+                ad_password = st.text_input(
+                    "Password", 
+                    type='password', 
+                    placeholder="Enter password", 
+                    key="admin_pass",
+                    help="Enter your secure password"
+                )
             
-            if st.button('🔓 Login', type="primary"):
-                # Debug: Print what's being compared (remove after testing)
-                # st.write(f"Debug - User: '{ad_user}' | Pass: '{ad_password}'")
-                
+            col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
+            
+            with col_btn2:
+                login_button = st.button('🔓 Login', type="primary", use_container_width=True)
+            
+            # Show hint button after 2 failed attempts
+            if st.session_state.login_attempts >= 2:
+                st.session_state.show_hint = True
+            
+            if st.session_state.show_hint:
+                col_hint1, col_hint2, col_hint3 = st.columns([1, 1, 1])
+                with col_hint2:
+                    if st.button('💡 Show Hint', type="secondary", use_container_width=True):
+                        st.markdown("""
+                            <div class='info-box'>
+                                <h4>🔐 Default Credentials</h4>
+                                <p><b>Username:</b> admin</p>
+                                <p><b>Password:</b> admin@resume-analyzer</p>
+                                <p style='margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;'>
+                                    💡 Tip: These are the default credentials for first-time access
+                                </p>
+                            </div>
+                        """, unsafe_allow_html=True)
+            
+            if login_button:
                 # Strip any whitespace
                 ad_user = ad_user.strip()
                 ad_password = ad_password.strip()
                 
                 if ad_user == 'admin' and ad_password == 'admin@resume-analyzer':
                     st.session_state.admin_logged_in = True
-                    st.success("✅ Login successful! Redirecting...")
-                    time.sleep(1)
+                    st.session_state.login_attempts = 0
+                    st.session_state.show_hint = False
+                    
+                    # Show loading animation
+                    with st.spinner(''):
+                        st.markdown("""
+                            <div class='success-message'>
+                                <h3>✅ Login Successful!</h3>
+                                <p>Redirecting to dashboard<span class='loading-dots'><span>.</span><span>.</span><span>.</span></span></p>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        time.sleep(2)
                     st.rerun()
                 else:
-                    st.error("❌ Wrong Username or Password")
+                    st.session_state.login_attempts += 1
+                    
+                    if st.session_state.login_attempts >= 3:
+                        st.error("❌ Too many failed attempts! Please try again or use the hint button.")
+                    else:
+                        st.error(f"❌ Wrong Username or Password (Attempt {st.session_state.login_attempts}/3)")
+                    
+                    # Shake animation for error
                     st.markdown("""
-                        <div class='info-box'>
-                            <h4>🔐 Default Credentials</h4>
-                            <p><b>Username:</b> admin</p>
-                            <p><b>Password:</b> admin@resume-analyzer</p>
-                        </div>
+                        <style>
+                        @keyframes shake {
+                            0%, 100% { transform: translateX(0); }
+                            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                            20%, 40%, 60%, 80% { transform: translateX(10px); }
+                        }
+                        .stTextInput > div > div > input {
+                            animation: shake 0.5s;
+                        }
+                        </style>
                     """, unsafe_allow_html=True)
+            
+            st.markdown("</div>", unsafe_allow_html=True)
         
         # Show admin dashboard if logged in
         if st.session_state.admin_logged_in:
