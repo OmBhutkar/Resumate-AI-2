@@ -762,9 +762,6 @@ def main():
                 </div>
             """, unsafe_allow_html=True)
             
-            # Sample Resume Button
-            if st.button("📥 Download Sample Resume Template", type="secondary"):
-                st.info("Sample template feature - Add your template PDF path")
         
         # Analysis Trigger
         if uploaded_file and act_name and act_mail:
