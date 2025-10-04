@@ -265,10 +265,78 @@ def extract_text_from_pdf(file_path):
         return ""
 
 def show_pdf(file_path):
-    with open(file_path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800" type="application/pdf" style="border-radius: 10px; border: 2px solid #3d3d46;"></iframe>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+    try:
+        # Get file information
+        file_size = os.path.getsize(file_path)
+        file_name = os.path.basename(file_path)
+        
+        # Create a professional file display card
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #1e2329 0%, #2d313a 100%);
+            border: 2px solid #FF4B4B;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            box-shadow: 0 8px 32px rgba(255, 75, 75, 0.1);
+        ">
+            <div style="font-size: 5rem; margin-bottom: 1rem; color: #FF4B4B;">📄</div>
+            <h2 style="color: #FFFFFF; margin-bottom: 1rem; font-weight: 700;">
+                Resume Successfully Uploaded!
+            </h2>
+            <div style="background: rgba(255, 75, 75, 0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+                <p style="color: #a0a0a0; margin: 0.5rem 0; font-size: 1.1rem;">
+                    <strong style="color: #FF4B4B;">📁 File Name:</strong> {file_name}
+                </p>
+                <p style="color: #a0a0a0; margin: 0.5rem 0; font-size: 1.1rem;">
+                    <strong style="color: #00C48C;">📏 File Size:</strong> {file_size:,} bytes
+                </p>
+                <p style="color: #a0a0a0; margin: 0.5rem 0; font-size: 1.1rem;">
+                    <strong style="color: #FFD700;">📅 Upload Time:</strong> {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+                </p>
+            </div>
+            <div style="background: rgba(0, 196, 140, 0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+                <p style="color: #00C48C; margin: 0; font-size: 1.2rem; font-weight: 600;">
+                    ✅ Your resume is being processed by our AI algorithms
+                </p>
+                <p style="color: #a0a0a0; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                    Analysis includes: ATS scoring, skill extraction, career field prediction, and job matching
+                </p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Add download button with better styling
+        with open(file_path, "rb") as f:
+            st.download_button(
+                label="📥 Download Your Resume",
+                data=f.read(),
+                file_name=file_name,
+                mime="application/pdf",
+                use_container_width=True,
+                type="primary"
+            )
+            
+        # Add some additional info
+        st.markdown("""
+        <div style="
+            background: rgba(255, 75, 75, 0.05);
+            border-left: 4px solid #FF4B4B;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        ">
+            <p style="color: #a0a0a0; margin: 0; font-size: 0.9rem;">
+                💡 <strong>Note:</strong> PDF preview is not available in this environment due to browser security restrictions. 
+                You can download your resume using the button above to view it locally.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    except Exception as e:
+        st.error(f"Error processing PDF: {e}")
+        st.info("Your resume has been uploaded successfully and is being analyzed.")
 
 def predict_career_field_naive_bayes(resume_text):
     try:
