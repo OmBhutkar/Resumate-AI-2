@@ -1131,58 +1131,142 @@ def main():
                     </div>
                 """, unsafe_allow_html=True)
                          
-    # ==================== Feedback Section ====================
+# ==================== Feedback Section ====================
     elif choice == 'Feedback':
-        st.title("💬 Feedback")
-        st.markdown("Help us improve Resumate AI with your valuable feedback")
+        st.title("💬 User Feedback")
+        
+        # Hero Section
+        st.markdown("""
+            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);'>
+                <h3 style='color: white; text-align: center; margin: 0;'>Help Us To Improve Resumate AI</h3>
+            </div>
+        """, unsafe_allow_html=True)
         
         col1, col2 = st.columns([2, 1])
         
         with col1:
+            # Feedback Form
+            st.markdown("""
+                <div style='background: linear-gradient(135deg, #1e1e2e 0%, #13131a 100%); padding: 2rem; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);'>
+                    <h4 style='color: #FF4B4B; margin-bottom: 1rem;'>📝 Share Your Experience</h4>
+                </div>
+            """, unsafe_allow_html=True)
+            
             with st.form("feedback_form"):
-                feed_name = st.text_input('Name')
-                feed_email = st.text_input('Email')
-                feed_score = st.slider('⭐ Rating (1-5 stars)', 1, 5, 5)
-                comments = st.text_area('Your Feedback', placeholder="Tell us what you think...", height=150)
+                feed_name = st.text_input('👤 Full Name', placeholder="Enter your name")
+                feed_email = st.text_input('📧 Email Address', placeholder="your.email@example.com")
                 
-                submitted = st.form_submit_button("Submit Feedback", type="primary")
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    feed_score = st.slider('⭐ Overall Rating', 1, 5, 5)
+                with col_b:
+                    feedback_category = st.selectbox('📂 Feedback Category', 
+                        ['General', 'Feature Request', 'Bug Report', 'UI/UX', 'Performance', 'Other'])
                 
-                if submitted and feed_name and feed_email:
-                    ts = time.time()
-                    cur_date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
-                    cur_time = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
-                    timestamp_str = str(cur_date + '_' + cur_time)
-                    
-                    insertf_data(feed_name, feed_email, feed_score, comments, timestamp_str)
-                    st.success("✅ Thank you for your feedback!")
-                    st.balloons()
-            st.markdown("</div>", unsafe_allow_html=True)
+                # Additional rating metrics
+                st.markdown("##### Rate Specific Features:")
+                col_x, col_y, col_z = st.columns(3)
+                with col_x:
+                    score_accuracy = st.slider('🎯 Score Accuracy', 1, 5, 5, key='acc')
+                with col_y:
+                    score_ui = st.slider('🎨 UI/UX Design', 1, 5, 5, key='ui')
+                with col_z:
+                    score_speed = st.slider('⚡ Speed/Performance', 1, 5, 5, key='speed')
+                
+                comments = st.text_area('💭 Your Detailed Feedback', 
+                    placeholder="Tell us what you loved, what could be better, or suggest new features...", 
+                    height=150)
+                
+                # Improvement suggestions
+                improvements = st.multiselect('🚀 What would you like to see improved?',
+                    ['Resume Analysis', 'Job Recommendations', 'Skill Suggestions', 'Video Resources', 
+                     'ATS Scoring', 'User Interface', 'Loading Speed', 'Mobile Experience'])
+                
+                would_recommend = st.radio('💯 Would you recommend Resumate AI to others?', 
+                    ['Yes, definitely!', 'Maybe', 'Not sure', 'No'], horizontal=True)
+                
+                submitted = st.form_submit_button("🚀 Submit Feedback", type="primary", use_container_width=True)
+                
+                if submitted:
+                    if feed_name and feed_email:
+                        ts = time.time()
+                        cur_date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+                        cur_time = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
+                        timestamp_str = str(cur_date + '_' + cur_time)
+                        
+                        # Enhanced data with additional fields
+                        avg_feature_score = round((score_accuracy + score_ui + score_speed) / 3, 1)
+                        improvements_str = ', '.join(improvements) if improvements else 'None'
+                        
+                        # You may need to update your insertf_data function to handle additional fields
+                        insertf_data(feed_name, feed_email, feed_score, comments, timestamp_str)
+                        
+                        st.success("✅ Thank you for your valuable feedback!")
+                        st.balloons()
+                        
+                        # Show summary
+                        st.markdown(f"""
+                            <div style='background: rgba(0, 196, 140, 0.1); padding: 1rem; border-radius: 10px; margin-top: 1rem; border-left: 4px solid #00C48C;'>
+                                <h5 style='color: #00C48C; margin: 0 0 0.5rem 0;'>📊 Your Feedback Summary</h5>
+                                <p style='margin: 0.3rem 0;'><b>Overall Rating:</b> {feed_score} ⭐</p>
+                                <p style='margin: 0.3rem 0;'><b>Category:</b> {feedback_category}</p>
+                                <p style='margin: 0.3rem 0;'><b>Feature Scores:</b> Accuracy: {score_accuracy}, UI/UX: {score_ui}, Speed: {score_speed}</p>
+                                <p style='margin: 0.3rem 0;'><b>Recommendation:</b> {would_recommend}</p>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.error("⚠️ Please fill in your name and email address")
         
         with col2:
+            # Info boxes
             st.markdown("""
-                <div class='info-box'>
-                    <h4>⭐ Why Feedback Matters</h4>
-                    <p>Your input helps us:</p>
-                    <ul>
+                <div style='background: linear-gradient(135deg, rgba(255, 75, 75, 0.2) 0%, rgba(255, 75, 75, 0.05) 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid rgba(255, 75, 75, 0.3); margin-bottom: 1rem;'>
+                    <h4 style='color: #FF4B4B; margin-bottom: 0.8rem;'>⭐ Why Feedback Matters</h4>
+                    <p style='color: #b0b0b0; margin: 0.5rem 0;'>Your input helps us:</p>
+                    <ul style='color: #b0b0b0; margin: 0.5rem 0; padding-left: 1.2rem;'>
                         <li>Improve ML algorithms</li>
                         <li>Enhance user experience</li>
                         <li>Add new features</li>
                         <li>Provide better recommendations</li>
+                        <li>Fix bugs faster</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("""
+                <div style='background: linear-gradient(135deg, rgba(0, 196, 140, 0.2) 0%, rgba(0, 196, 140, 0.05) 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid rgba(0, 196, 140, 0.3); margin-bottom: 1rem;'>
+                    <h4 style='color: #00C48C; margin-bottom: 0.8rem;'>🎁 Feedback Rewards</h4>
+                    <p style='color: #b0b0b0; margin: 0.5rem 0;'>Active contributors get:</p>
+                    <ul style='color: #b0b0b0; margin: 0.5rem 0; padding-left: 1.2rem;'>
+                        <li>Early access to features</li>
+                        <li>Priority support</li>
+                        <li>Recognition badge</li>
+                        <li>Exclusive tips & tricks</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("""
+                <div style='background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.05) 100%); padding: 1.5rem; border-radius: 15px; border: 2px solid rgba(255, 215, 0, 0.3);'>
+                    <h4 style='color: #FFD700; margin-bottom: 0.8rem;'>💡 Quick Tips</h4>
+                    <ul style='color: #b0b0b0; margin: 0.5rem 0; padding-left: 1.2rem;'>
+                        <li>Be specific in your feedback</li>
+                        <li>Share both positives and negatives</li>
+                        <li>Suggest actionable improvements</li>
+                        <li>Include examples if possible</li>
                     </ul>
                 </div>
             """, unsafe_allow_html=True)
         
-        try:
-            feedback_df = pd.read_csv(FEEDBACK_CSV)
-            if len(feedback_df) > 0:
-                st.subheader("📝 Recent Feedback")
-                st.dataframe(feedback_df[['feed_name', 'feed_score', 'comments', 'Timestamp']].tail(10), use_container_width=True)
-                
-                avg_rating = feedback_df['feed_score'].mean()
-                st.markdown(f"<p style='color: #00C48C; font-size: 2rem; font-weight: 700;'>Average Rating: {avg_rating:.1f} ⭐</p>", unsafe_allow_html=True)
-                st.markdown("</div>", unsafe_allow_html=True)
-        except:
-            st.info("No feedback data available yet")
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Simple feedback display without analytics
+        st.markdown("""
+            <div style='background: linear-gradient(135deg, #1e1e2e 0%, #13131a 100%); padding: 2rem; border-radius: 15px; margin-top: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3);'>
+                <h3 style='color: #667eea; text-align: center; margin-bottom: 1.5rem;'>💬 Thank You For Your Feedback!</h3>
+                <p style='color: #b0b0b0; text-align: center; margin: 0;'>Your feedback is valuable and helps us improve Resumate AI continuously.</p>
+            </div>
+        """, unsafe_allow_html=True)
     
     # ==================== About Section ====================
     elif choice == 'About':
