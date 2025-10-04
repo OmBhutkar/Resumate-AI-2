@@ -200,7 +200,7 @@ USER_DATA_CSV = CSV_DIR / 'users.csv'
 FEEDBACK_CSV = CSV_DIR / 'feedback.csv'
 
 # ==================== API Keys ====================
-GROQ_API_KEY = "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"
+GROQ_API_KEY = "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"
 RAPIDAPI_KEY = "f11509220amshacdf4a37eb0525bp13b188jsn95e091e6f6f7"
 
 # ==================== ML Models & Data ====================
@@ -628,66 +628,164 @@ def main():
     link = '<b>Built with 🤖 by <a href="" style="text-decoration: none; color: #FF4B4B;">Team Resumate AI</a></b>'
     st.sidebar.markdown(link, unsafe_allow_html=True)
     
-    # ==================== User Page ====================
+# ==================== User Page ====================
     if choice == 'User':
-        st.markdown("Upload your resume and get instant ML-powered insights with dynamic ATS scoring")
+        # Hero Section
+        st.markdown("""
+            <div style='text-align: center; padding: 2rem 0;'>
+                <h1 style='font-size: 2.5rem; background: linear-gradient(135deg, #FF4B4B 0%, #ff8080 100%); 
+                -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;'>
+                Transform Your Resume with AI
+                </h1>
+                <p style='font-size: 1.2rem; color: #a0a0a0;'>Upload your resume and get instant ML-powered insights with dynamic ATS scoring</p>
+            </div>
+        """, unsafe_allow_html=True)
         
+        # Progress Tracker
+        if 'user_step' not in st.session_state:
+            st.session_state.user_step = 1
+        
+        # Step Indicator
+        steps = ["📝 Personal Info", "📤 Upload Resume", "🤖 Analysis", "📊 Results"]
+        cols = st.columns(4)
+        for idx, (col, step) in enumerate(zip(cols, steps), 1):
+            with col:
+                if idx <= st.session_state.user_step:
+                    st.markdown(f"""
+                        <div style='background: linear-gradient(135deg, #FF4B4B 0%, #ff3333 100%); 
+                        padding: 1rem; border-radius: 10px; text-align: center; font-weight: 600;'>
+                        {step}
+                        </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                        <div style='background: rgba(60, 60, 70, 0.5); 
+                        padding: 1rem; border-radius: 10px; text-align: center; color: #666;'>
+                        {step}
+                        </div>
+                    """, unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Main Content Area
         col1, col2 = st.columns([3, 2])
         
         with col1:
-            st.subheader("Personal Information")
-            act_name = st.text_input('Full Name*', placeholder="John Doe")
-            act_mail = st.text_input('Email Address*', placeholder="john@example.com")
-            act_mob = st.text_input('Mobile Number*', placeholder="+1 234 567 8900")
-            st.markdown("</div>", unsafe_allow_html=True)
+            # Personal Information Form
+            st.markdown("""
+                <div class='stCard'>
+                    <h3>📋 Personal Information</h3>
+                    <p style='color: #a0a0a0;'>Tell us about yourself</p>
+                </div>
+            """, unsafe_allow_html=True)
             
-            uploaded_file = st.file_uploader("📤 Upload Resume (PDF)", type=['pdf'])
+            act_name = st.text_input('Full Name*', placeholder="John Doe", key="user_name")
+            act_mail = st.text_input('Email Address*', placeholder="john@example.com", key="user_email")
+            act_mob = st.text_input('Mobile Number*', placeholder="+1 234 567 8900", key="user_mobile")
             
-            if uploaded_file and act_name and act_mail:
-                # System info collection
-                sec_token = secrets.token_urlsafe(12)
-                host_name = socket.gethostname()
+            # Additional user preferences
+            col_pref1, col_pref2 = st.columns(2)
+            with col_pref1:
+                job_preference = st.selectbox(
+                    "Job Preference",
+                    ["Full-time", "Part-time", "Contract", "Internship", "Freelance"]
+                )
+            with col_pref2:
+                experience_years = st.number_input("Years of Experience", min_value=0, max_value=50, value=0)
+            
+            # Resume Upload Section
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("""
+                <div class='stCard'>
+                    <h3>📤 Upload Your Resume</h3>
+                    <p style='color: #a0a0a0;'>Supported format: PDF only (Max 10MB)</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            uploaded_file = st.file_uploader("", type=['pdf'], label_visibility="collapsed")
+            
+            # Quick Tips
+            with st.expander("💡 Resume Tips for Better ATS Score"):
+                st.markdown("""
+                    - **Use clear section headings** (Experience, Education, Skills)
+                    - **Include action verbs** (Developed, Managed, Led, Created)
+                    - **Quantify achievements** (Increased sales by 30%)
+                    - **Add relevant technical skills**
+                    - **Include certifications and projects**
+                    - **Keep formatting simple and clean**
+                    - **Optimize for keywords** in your field
+                """)
+        
+        with col2:
+            # Quick Stats Card
+            st.markdown("""
+                <div class='info-box'>
+                    <h3>🎯 Why Use Our Analyzer?</h3>
+                    <ul style='line-height: 2; font-size: 0.95rem;'>
+                        <li><b>AI-Powered Analysis</b><br/>Machine learning algorithms scan your resume</li>
+                        <li><b>Instant ATS Score</b><br/>Know how recruiters' systems will rate you</li>
+                        <li><b>Career Field Detection</b><br/>Find your perfect job category</li>
+                        <li><b>Skill Recommendations</b><br/>Learn what skills to add</li>
+                        <li><b>Live Job Matches</b><br/>Get relevant job listings instantly</li>
+                        <li><b>Learning Resources</b><br/>Video tutorials for upskilling</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            # Sample Resume Button
+            if st.button("📥 Download Sample Resume Template", type="secondary"):
+                st.info("Sample template feature - Add your template PDF path")
+        
+        # Analysis Trigger
+        if uploaded_file and act_name and act_mail:
+            st.session_state.user_step = 3
+            
+            # System info collection
+            sec_token = secrets.token_urlsafe(12)
+            host_name = socket.gethostname()
+            try:
+                ip_add = socket.gethostbyname(host_name)
+            except:
+                ip_add = "127.0.0.1"
+            try:
+                dev_user = os.getlogin()
+            except OSError:
+                dev_user = "unknown_user"
+            os_name_ver = platform.system() + " " + platform.release()
+            
+            # Location detection
+            if GEOCODING_AVAILABLE:
                 try:
-                    ip_add = socket.gethostbyname(host_name)
+                    g = geocoder.ip('me')
+                    latlong = str(g.latlng)
+                    geolocator = Nominatim(user_agent="resumate_app", timeout=10)
+                    location = geolocator.reverse(g.latlng, language='en')
+                    address = location.raw['address']
+                    city = address.get('city', 'Unknown')
+                    state = address.get('state', 'Unknown')
+                    country = address.get('country', 'Unknown')
                 except:
-                    ip_add = "127.0.0.1"
-                try:
-                    dev_user = os.getlogin()
-                except OSError:
-                    dev_user = "unknown_user"
-                os_name_ver = platform.system() + " " + platform.release()
-                
-                # Location detection
-                if GEOCODING_AVAILABLE:
-                    try:
-                        g = geocoder.ip('me')
-                        latlong = str(g.latlng)
-                        geolocator = Nominatim(user_agent="resumate_app", timeout=10)
-                        location = geolocator.reverse(g.latlng, language='en')
-                        address = location.raw['address']
-                        city = address.get('city', 'Unknown')
-                        state = address.get('state', 'Unknown')
-                        country = address.get('country', 'Unknown')
-                    except:
-                        latlong, city, state, country = "[0.0, 0.0]", "Unknown", "Unknown", "Unknown"
-                else:
                     latlong, city, state, country = "[0.0, 0.0]", "Unknown", "Unknown", "Unknown"
-                
-                # Save file
-                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = uploaded_file.name
-                file_path = RESUME_DIR / filename
-                
-                with open(file_path, 'wb') as f:
-                    f.write(uploaded_file.getbuffer())
-                
-                # PDF Display
-                st.markdown("---")
-                st.subheader("📄 Your Uploaded Resume")
+            else:
+                latlong, city, state, country = "[0.0, 0.0]", "Unknown", "Unknown", "Unknown"
+            
+            # Save file
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = uploaded_file.name
+            file_path = RESUME_DIR / filename
+            
+            with open(file_path, 'wb') as f:
+                f.write(uploaded_file.getbuffer())
+            
+            # Tabbed Interface for Resume and Analysis
+            st.markdown("---")
+            tab1, tab2, tab3 = st.tabs(["📄 Resume Preview", "🤖 AI Analysis", "📊 Detailed Report"])
+            
+            with tab1:
+                st.markdown("<h3>Your Uploaded Resume</h3>", unsafe_allow_html=True)
                 show_pdf(str(file_path))
-                
-                st.markdown("---")
-                
+            
+            with tab2:
                 # ML Analysis
                 with st.spinner("🤖 Analyzing with Enhanced ML algorithms..."):
                     resume_text = extract_text_from_pdf(str(file_path))
@@ -705,21 +803,23 @@ def main():
                         skills = extract_skills(resume_text)
                         resume_score, feedback = analyze_resume_ml_enhanced(resume_text)
                         
-                        # Candidate level
-                        if no_of_pages < 1:
-                            cand_level = "NA"
+                        # Candidate level with experience years
+                        if experience_years >= 5:
+                            cand_level = "Experienced"
+                        elif experience_years >= 1:
+                            cand_level = "Intermediate"
                         elif 'internship' in resume_text:
                             cand_level = "Intermediate"
-                        elif any(word in resume_text for word in ['experience', 'work experience']):
-                            cand_level = "Experienced"
                         else:
                             cand_level = "Fresher"
                         
-                        # Display Results
+                        st.session_state.user_step = 4
+                        
+                        # Success Message
                         st.success(f"✅ Analysis Complete for {act_name}!")
                         
-                        # Enhanced Metrics
-                        metric_col1, metric_col2, metric_col3 = st.columns(3)
+                        # Enhanced Metrics with Icons
+                        metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
                         
                         with metric_col1:
                             st.markdown(f"""
@@ -733,7 +833,7 @@ def main():
                             st.markdown(f"""
                                 <div class='metric-card'>
                                     <div class='metric-value'>{confidence}%</div>
-                                    <div class='metric-label'>Field Confidence</div>
+                                    <div class='metric-label'>Confidence</div>
                                 </div>
                             """, unsafe_allow_html=True)
                         
@@ -741,164 +841,295 @@ def main():
                             st.markdown(f"""
                                 <div class='metric-card'>
                                     <div class='metric-value'>{len(skills)}</div>
-                                    <div class='metric-label'>Skills Detected</div>
+                                    <div class='metric-label'>Skills Found</div>
                                 </div>
                             """, unsafe_allow_html=True)
                         
-                        # Predicted Field
+                        with metric_col4:
+                            st.markdown(f"""
+                                <div class='metric-card'>
+                                    <div class='metric-value'>{no_of_pages}</div>
+                                    <div class='metric-label'>Pages</div>
+                                </div>
+                            """, unsafe_allow_html=True)
                         
-                        st.subheader("🎯 Predicted Career Field")
-                        st.markdown(f"<h3 style='color: #FF4B4B;'>{predicted_field}</h3>", unsafe_allow_html=True)
+                        # Predicted Field with Visual
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.markdown(f"""
+                            <div class='stCard'>
+                                <h2>🎯 Predicted Career Field</h2>
+                                <h1 style='color: #FF4B4B; font-size: 2.5rem; margin: 1rem 0;'>{predicted_field}</h1>
+                                <p style='color: #a0a0a0;'>Confidence Level: {confidence}%</p>
+                            </div>
+                        """, unsafe_allow_html=True)
                         st.progress(confidence / 100)
-                        st.markdown("</div>", unsafe_allow_html=True)
                         
-                        # Skills Display
+                        # Skills Analysis
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        col_skill1, col_skill2 = st.columns(2)
                         
-                        st.subheader("💡 Detected Skills")
-                        if skills:
-                            keywords = st_tags(label='### Your Current Skills', 
-                                             text='Skills extracted from your resume', 
-                                             value=skills, key='1')
-                        else:
-                            st.warning("No specific technical skills detected. Add more skills to your resume!")
-                        
-                        # Recommend skills
-                        recommended_skills = []
-                        if predicted_field in SKILL_CATEGORIES:
-                            all_field_skills = SKILL_CATEGORIES[predicted_field]
-                            recommended_skills = [s.title() for s in all_field_skills if s not in resume_text][:10]
+                        with col_skill1:
+                            st.markdown("""
+                                <div class='stCard'>
+                                    <h3>💡 Your Current Skills</h3>
+                                </div>
+                            """, unsafe_allow_html=True)
                             
-                            if recommended_skills:
-                                st.success(f"**Recommended skills for {predicted_field}:**")
-                                recommended_keywords = st_tags(
-                                    label='### Skills to Add',
-                                    text='Boost your resume with these skills',
-                                    value=recommended_skills, key='2'
-                                )
-                        st.markdown("</div>", unsafe_allow_html=True)
-                        
-                        # Enhanced ATS Score Breakdown
-                       
-                        st.subheader("📊 Detailed ATS Score Breakdown")
-                        
-                        positive_feedback = []
-                        improvement_feedback = []
-                        
-                        for item, points in feedback:
-                            if points > 0:
-                                positive_feedback.append((item, points))
+                            if skills:
+                                keywords = st_tags(label='', 
+                                                 text='Skills extracted from your resume', 
+                                                 value=skills, key='current_skills')
                             else:
-                                improvement_feedback.append((item, points))
+                                st.warning("No specific technical skills detected. Add more skills!")
                         
-                        col_a, col_b = st.columns(2)
-                        
-                        with col_a:
-                            st.markdown("#### ✅ Strengths")
-                            for item, points in positive_feedback:
-                                st.markdown(f"<p style='color: #00C48C;'>{item}</p>", unsafe_allow_html=True)
-                        
-                        with col_b:
-                            st.markdown("#### ⚠️ Areas to Improve")
-                            for item, points in improvement_feedback:
-                                st.markdown(f"<p style='color: #FF4B4B;'>{item}</p>", unsafe_allow_html=True)
-                        
-                        st.markdown("---")
-                        
-                        # Score visualization
-                        my_bar = st.progress(0)
-                        for percent_complete in range(resume_score):
-                            time.sleep(0.01)
-                            my_bar.progress(percent_complete + 1)
-                        
-                        if resume_score >= 80:
-                            st.markdown(f'''<h2 class='score-excellent'>⭐ Your ATS Score: {resume_score}/100 - Excellent!</h2>
-                                <p style='color: #00C48C;'>Your resume is highly optimized for ATS systems. Great job!</p>''', unsafe_allow_html=True)
-                        elif resume_score >= 60:
-                            st.markdown(f'''<h2 class='score-good'>👍 Your ATS Score: {resume_score}/100 - Good!</h2>
-                                <p style='color: #FFA500;'>Your resume is decent but has room for improvement.</p>''', unsafe_allow_html=True)
-                        else:
-                            st.markdown(f'''<h2 class='score-poor'>⚠️ Your ATS Score: {resume_score}/100 - Needs Improvement</h2>
-                                <p style='color: #FF4B4B;'>Focus on the improvement areas above to boost your score.</p>''', unsafe_allow_html=True)
-                        st.markdown("</div>", unsafe_allow_html=True)
-                        
-                        # Job Search
-                        
-                        st.subheader("🔍 Job Recommendations")
-                        
-                        job_query = predicted_field if predicted_field != "General IT" else "Software Engineer"
-                        job_location = st.text_input("Location", value="United States", key="job_loc")
-                        
-                        if st.button("🔎 Search Jobs", type="primary"):
-                            with st.spinner("🔎 Fetching live job listings..."):
-                                job_listings = fetch_jobs_rapidapi(job_query, job_location)
+                        with col_skill2:
+                            # Recommend skills
+                            recommended_skills = []
+                            if predicted_field in SKILL_CATEGORIES:
+                                all_field_skills = SKILL_CATEGORIES[predicted_field]
+                                recommended_skills = [s.title() for s in all_field_skills if s not in resume_text][:10]
                                 
-                                if job_listings and job_listings.get('data'):
-                                    jobs = job_listings['data']
+                                if recommended_skills:
+                                    st.markdown("""
+                                        <div class='stCard'>
+                                            <h3>🚀 Recommended Skills</h3>
+                                        </div>
+                                    """, unsafe_allow_html=True)
                                     
-                                    if jobs:
-                                        st.success(f"🎯 Found {len(jobs)} matching jobs!")
-                                        
-                                        for i, job in enumerate(jobs[:10], 1):
-                                            job_title = job.get('job_title', 'N/A')
-                                            employer = job.get('employer_name', 'N/A')
-                                            location = job.get('job_city', 'N/A')
-                                            description = job.get('job_description', '')
-                                            job_link = job.get('job_apply_link', '#')
-                                            
-                                            # ML Match Score
-                                            if skills and description:
-                                                match_score = calculate_skill_match_tfidf(' '.join(skills).lower(), description.lower().split())
-                                            else:
-                                                match_score = random.randint(65, 90)
-                                            
-                                            st.markdown(f"""
-                                                <div class='job-card'>
-                                                    <h3>{job_title}</h3>
-                                                    <h4 style='color: #FF4B4B;'>{employer}</h4>
-                                                    <p style='color: #a0a0a0;'>📍 {location}</p>
-                                                    <p style='color: #00C48C; font-weight: 600;'>🎯 ML Match Score: {match_score}%</p>
-                                                    <a href='{job_link}' target='_blank' style='color: #FF4B4B; text-decoration: none; font-weight: 600;'>
-                                                        Apply Now →
-                                                    </a>
-                                                </div>
-                                            """, unsafe_allow_html=True)
-                                    else:
-                                        st.warning("No jobs found. Try different keywords.")
-                                else:
-                                    st.info("Job listings unavailable. API may be rate-limited.")
-                        st.markdown("</div>", unsafe_allow_html=True)
+                                    recommended_keywords = st_tags(
+                                        label='',
+                                        text='Boost your resume with these skills',
+                                        value=recommended_skills, key='recommended_skills'
+                                    )
                         
-                        # YouTube Recommendations
-            
-                        st.subheader("🎥 YouTube Learning Resources")
-                        st.markdown(f"<p style='color: #a0a0a0;'>Curated videos for {predicted_field}</p>", unsafe_allow_html=True)
+                        # Score Comparison Chart
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.markdown("""
+                            <div class='stCard'>
+                                <h3>📊 Score Comparison</h3>
+                            </div>
+                        """, unsafe_allow_html=True)
                         
-                        videos = get_youtube_recommendations(predicted_field)
+                        comparison_df = pd.DataFrame({
+                            'Category': ['Your Score', 'Average Score', 'Top 10%'],
+                            'Score': [resume_score, 65, 85]
+                        })
                         
-                        for video in videos:
-                            st.markdown(f"**{video['title']}**")
-                            try:
-                                st.video(video['url'])
-                            except:
-                                st.markdown(f"[Watch Video]({video['url']})")
-                            st.markdown("---")
-                        st.markdown("</div>", unsafe_allow_html=True)
+                        fig = px.bar(comparison_df, x='Category', y='Score',
+                                   color='Score',
+                                   color_continuous_scale=['#FF4B4B', '#FFD700', '#00C48C'],
+                                   text='Score')
                         
-                        # Save to database
-                        ts = time.time()
-                        cur_date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
-                        cur_time = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
-                        timestamp_str = str(cur_date + '_' + cur_time)
-                        
-                        insert_data(
-                            str(sec_token), str(ip_add), host_name, dev_user, os_name_ver,
-                            str(latlong), city, state, country, act_name, act_mail, act_mob,
-                            act_name, act_mail, str(resume_score), timestamp_str,
-                            str(no_of_pages), predicted_field, cand_level,
-                            str(skills), str(recommended_skills), str(predicted_field), filename
+                        fig.update_traces(texttemplate='%{text}', textposition='outside')
+                        fig.update_layout(
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(30, 33, 48, 0.5)',
+                            font=dict(color='white'),
+                            showlegend=False,
+                            height=400,
+                            yaxis=dict(range=[0, 100])
                         )
                         
-                        st.balloons()
+                        st.plotly_chart(fig, use_container_width=True)
+            
+            with tab3:
+                # Detailed Report
+                st.markdown("""
+                    <div class='stCard'>
+                        <h2>📊 Comprehensive Resume Analysis Report</h2>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+                # Score Breakdown
+                positive_feedback = [(item, points) for item, points in feedback if points > 0]
+                improvement_feedback = [(item, points) for item, points in feedback if points == 0]
+                
+                col_report1, col_report2 = st.columns(2)
+                
+                with col_report1:
+                    st.markdown("""
+                        <div class='stCard' style='border-left: 5px solid #00C48C;'>
+                            <h3>✅ Strengths Detected</h3>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    
+                    for item, points in positive_feedback:
+                        st.markdown(f"""
+                            <div style='background: rgba(0, 196, 140, 0.1); padding: 0.8rem; 
+                            border-radius: 8px; margin: 0.5rem 0; border-left: 3px solid #00C48C;'>
+                                <p style='color: #00C48C; margin: 0;'>{item}</p>
+                            </div>
+                        """, unsafe_allow_html=True)
+                
+                with col_report2:
+                    st.markdown("""
+                        <div class='stCard' style='border-left: 5px solid #FF4B4B;'>
+                            <h3>⚠️ Improvement Areas</h3>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    
+                    for item, points in improvement_feedback:
+                        st.markdown(f"""
+                            <div style='background: rgba(255, 75, 75, 0.1); padding: 0.8rem; 
+                            border-radius: 8px; margin: 0.5rem 0; border-left: 3px solid #FF4B4B;'>
+                                <p style='color: #FF4B4B; margin: 0;'>{item}</p>
+                            </div>
+                        """, unsafe_allow_html=True)
+                
+                # Animated Score Progress
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown(f"""
+                    <div class='stCard'>
+                        <h3>🎯 Final ATS Score</h3>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+                my_bar = st.progress(0)
+                for percent_complete in range(resume_score):
+                    time.sleep(0.005)
+                    my_bar.progress(percent_complete + 1)
+                
+                if resume_score >= 80:
+                    st.markdown(f"""
+                        <div class='stCard' style='background: linear-gradient(135deg, rgba(0, 196, 140, 0.2) 0%, rgba(0, 196, 140, 0.05) 100%); 
+                        border: 2px solid #00C48C;'>
+                            <h2 class='score-excellent'>⭐ Outstanding: {resume_score}/100</h2>
+                            <p style='color: #00C48C; font-size: 1.1rem;'>Your resume is highly optimized for ATS systems. You're in the top tier!</p>
+                        </div>
+                    """, unsafe_allow_html=True)
+                elif resume_score >= 60:
+                    st.markdown(f"""
+                        <div class='stCard' style='background: linear-gradient(135deg, rgba(255, 165, 0, 0.2) 0%, rgba(255, 165, 0, 0.05) 100%); 
+                        border: 2px solid #FFA500;'>
+                            <h2 class='score-good'>👍 Good Progress: {resume_score}/100</h2>
+                            <p style='color: #FFA500; font-size: 1.1rem;'>Your resume is solid. Focus on improvement areas to reach excellence.</p>
+                        </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                        <div class='stCard' style='background: linear-gradient(135deg, rgba(255, 75, 75, 0.2) 0%, rgba(255, 75, 75, 0.05) 100%); 
+                        border: 2px solid #FF4B4B;'>
+                            <h2 class='score-poor'>⚠️ Needs Work: {resume_score}/100</h2>
+                            <p style='color: #FF4B4B; font-size: 1.1rem;'>Your resume needs significant improvements. Follow our recommendations above.</p>
+                        </div>
+                    """, unsafe_allow_html=True)
+                
+                # Job Recommendations
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown("""
+                    <div class='stCard'>
+                        <h2>🔍 Personalized Job Recommendations</h2>
+                        <p style='color: #a0a0a0;'>Based on your skills and predicted field</p>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+                job_query = predicted_field if predicted_field != "General IT" else "Software Engineer"
+                
+                col_job1, col_job2 = st.columns([3, 1])
+                with col_job1:
+                    job_location = st.text_input("📍 Location", value="United States", key="job_location")
+                with col_job2:
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    search_jobs = st.button("🔎 Find Jobs", type="primary")
+                
+                if search_jobs:
+                    with st.spinner("🔎 Searching live job listings..."):
+                        job_listings = fetch_jobs_rapidapi(job_query, job_location)
+                        
+                        if job_listings and job_listings.get('data'):
+                            jobs = job_listings['data']
+                            
+                            if jobs:
+                                st.success(f"🎯 Found {len(jobs)} matching opportunities!")
+                                
+                                for i, job in enumerate(jobs[:10], 1):
+                                    job_title = job.get('job_title', 'N/A')
+                                    employer = job.get('employer_name', 'N/A')
+                                    location = job.get('job_city', 'N/A')
+                                    description = job.get('job_description', '')
+                                    job_link = job.get('job_apply_link', '#')
+                                    
+                                    # ML Match Score
+                                    if skills and description:
+                                        match_score = calculate_skill_match_tfidf(' '.join(skills).lower(), description.lower().split())
+                                    else:
+                                        match_score = random.randint(65, 90)
+                                    
+                                    st.markdown(f"""
+                                        <div class='job-card'>
+                                            <h3>#{i}. {job_title}</h3>
+                                            <h4 style='color: #FF4B4B;'>🏢 {employer}</h4>
+                                            <p style='color: #a0a0a0;'>📍 {location}</p>
+                                            <div style='margin: 1rem 0;'>
+                                                <span style='background: linear-gradient(135deg, #00C48C 0%, #00a070 100%); 
+                                                padding: 0.5rem 1rem; border-radius: 20px; color: white; font-weight: 600;'>
+                                                    🎯 Match: {match_score}%
+                                                </span>
+                                            </div>
+                                            <a href='{job_link}' target='_blank' 
+                                            style='background: linear-gradient(135deg, #FF4B4B 0%, #ff3333 100%); 
+                                            color: white; padding: 0.7rem 1.5rem; border-radius: 8px; text-decoration: none; 
+                                            font-weight: 600; display: inline-block; margin-top: 1rem;'>
+                                                Apply Now →
+                                            </a>
+                                        </div>
+                                    """, unsafe_allow_html=True)
+                            else:
+                                st.warning("No jobs found. Try different keywords.")
+                        else:
+                            st.info("Job listings temporarily unavailable.")
+                
+                # Learning Resources
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown("""
+                    <div class='stCard'>
+                        <h2>🎥 Recommended Learning Path</h2>
+                        <p style='color: #a0a0a0;'>Curated courses and tutorials for {}</p>
+                    </div>
+                """.format(predicted_field), unsafe_allow_html=True)
+                
+                videos = get_youtube_recommendations(predicted_field)
+                
+                video_cols = st.columns(2)
+                for idx, video in enumerate(videos):
+                    with video_cols[idx % 2]:
+                        st.markdown(f"""
+                            <div style='background: linear-gradient(135deg, #1e2130 0%, #2d313a 100%); 
+                            padding: 1rem; border-radius: 10px; margin: 0.5rem 0; border-left: 4px solid #FF4B4B;'>
+                                <h4 style='color: #FF4B4B;'>{video['title']}</h4>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        try:
+                            st.video(video['url'])
+                        except:
+                            st.markdown(f"[Watch Video]({video['url']})")
+                
+                # Save to database
+                ts = time.time()
+                cur_date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+                cur_time = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
+                timestamp_str = str(cur_date + '_' + cur_time)
+                
+                insert_data(
+                    str(sec_token), str(ip_add), host_name, dev_user, os_name_ver,
+                    str(latlong), city, state, country, act_name, act_mail, act_mob,
+                    act_name, act_mail, str(resume_score), timestamp_str,
+                    str(no_of_pages), predicted_field, cand_level,
+                    str(skills), str(recommended_skills), str(predicted_field), filename
+                )
+                
+                # Success Celebration
+                st.balloons()
+                
+                # Download Report Button
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown("""
+                    <div style='text-align: center; padding: 2rem; background: linear-gradient(135deg, rgba(255, 75, 75, 0.1) 0%, rgba(0, 196, 140, 0.1) 100%); 
+                    border-radius: 15px; border: 2px solid #FF4B4B;'>
+                        <h3>🎉 Analysis Complete!</h3>
+                        <p style='color: #a0a0a0;'>Your resume has been analyzed and saved.</p>
+                    </div>
+                """, unsafe_allow_html=True)
                          
     # ==================== Feedback Section ====================
     elif choice == 'Feedback':
@@ -1296,6 +1527,199 @@ def main():
                     
                     st.plotly_chart(fig, use_container_width=True)
                     st.markdown("</div>", unsafe_allow_html=True)
+                    
+                    # Advanced Analytics Section
+                    st.markdown("---")
+                    st.header("**📊 Advanced Analytics**")
+                    
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        # Top Skills Analysis
+                        st.subheader("**🔥 Most Common Skills**")
+                        all_skills = []
+                        for skills_str in user_df['Actual_skills'].dropna():
+                            try:
+                                skills_list = eval(skills_str) if isinstance(skills_str, str) else skills_str
+                                if isinstance(skills_list, list):
+                                    all_skills.extend(skills_list)
+                            except:
+                                pass
+                        
+                        if all_skills:
+                            from collections import Counter
+                            skill_counts = Counter(all_skills)
+                            top_skills = dict(skill_counts.most_common(10))
+                            
+                            fig = px.bar(x=list(top_skills.values()), 
+                                       y=list(top_skills.keys()),
+                                       orientation='h',
+                                       title='<b>Top 10 Skills Across All Resumes</b>',
+                                       labels={'x': 'Count', 'y': 'Skill'},
+                                       color=list(top_skills.values()),
+                                       color_continuous_scale=['#FF4B4B', '#FFD700', '#00C48C'])
+                            
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(30, 33, 48, 0.5)',
+                                font=dict(color='white', size=12),
+                                title_font=dict(size=16, color='#FF4B4B'),
+                                showlegend=False,
+                                height=400,
+                                xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+                                yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)')
+                            )
+                            
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info("No skill data available")
+                    
+                    with col2:
+                        # Score by Field Analysis
+                        st.subheader("**📈 Average Score by Field**")
+                        field_scores = user_df.groupby('Predicted_Field')['resume_score'].apply(
+                            lambda x: pd.to_numeric(x, errors='coerce').mean()
+                        ).sort_values(ascending=True)
+                        
+                        fig = px.bar(x=field_scores.values,
+                                   y=field_scores.index,
+                                   orientation='h',
+                                   title='<b>Average ATS Score by Career Field</b>',
+                                   labels={'x': 'Average Score', 'y': 'Field'},
+                                   color=field_scores.values,
+                                   color_continuous_scale='RdYlGn')
+                        
+                        fig.update_layout(
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(30, 33, 48, 0.5)',
+                            font=dict(color='white', size=12),
+                            title_font=dict(size=16, color='#00C48C'),
+                            showlegend=False,
+                            height=400,
+                            xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)', range=[0, 100]),
+                            yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)')
+                        )
+                        
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Timeline Analysis
+                    st.subheader("**📅 User Activity Timeline**")
+                    user_df['Date'] = pd.to_datetime(user_df['Timestamp'].str.split('_').str[0], errors='coerce')
+                    daily_users = user_df.groupby('Date').size().reset_index(name='Users')
+                    
+                    fig = px.line(daily_users, x='Date', y='Users',
+                                title='<b>Daily User Registrations</b>',
+                                markers=True)
+                    
+                    fig.update_traces(
+                        line=dict(color='#FF4B4B', width=3),
+                        marker=dict(size=8, color='#00C48C', line=dict(color='white', width=2))
+                    )
+                    
+                    fig.update_layout(
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(30, 33, 48, 0.5)',
+                        font=dict(color='white', size=12),
+                        title_font=dict(size=18, color='#FF4B4B'),
+                        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)', title='<b>Date</b>'),
+                        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)', title='<b>Number of Users</b>'),
+                        hovermode='x unified',
+                        height=400
+                    )
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Geographic Distribution
+                    if 'city' in user_df.columns and 'country' in user_df.columns:
+                        st.subheader("**🌍 Geographic Distribution**")
+                        
+                        col1, col2 = st.columns(2)
+                        
+                        with col1:
+                            top_cities = user_df['city'].value_counts().head(10)
+                            fig = px.bar(x=top_cities.values,
+                                       y=top_cities.index,
+                                       orientation='h',
+                                       title='<b>Top 10 Cities</b>',
+                                       labels={'x': 'Users', 'y': 'City'},
+                                       color=top_cities.values,
+                                       color_continuous_scale='Viridis')
+                            
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(30, 33, 48, 0.5)',
+                                font=dict(color='white', size=11),
+                                title_font=dict(size=16, color='#FFD700'),
+                                showlegend=False,
+                                height=350
+                            )
+                            
+                            st.plotly_chart(fig, use_container_width=True)
+                        
+                        with col2:
+                            country_counts = user_df['country'].value_counts().head(10)
+                            fig = px.pie(values=country_counts.values,
+                                       names=country_counts.index,
+                                       title='<b>Top Countries</b>',
+                                       hole=0.4,
+                                       color_discrete_sequence=px.colors.qualitative.Set3)
+                            
+                            fig.update_traces(
+                                textposition='inside',
+                                textinfo='percent+label',
+                                marker=dict(line=dict(color='#000000', width=2))
+                            )
+                            
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                font=dict(color='white', size=11),
+                                title_font=dict(size=16, color='#FFD700'),
+                                height=350,
+                                showlegend=False
+                            )
+                            
+                            st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Search and Filter Section
+                    st.markdown("---")
+                    st.header("**🔍 Search & Filter Users**")
+                    
+                    search_col1, search_col2, search_col3 = st.columns(3)
+                    
+                    with search_col1:
+                        search_name = st.text_input("Search by Name", placeholder="Enter name...")
+                    
+                    with search_col2:
+                        filter_field = st.selectbox("Filter by Field", 
+                                                    ['All'] + list(user_df['Predicted_Field'].unique()))
+                    
+                    with search_col3:
+                        filter_level = st.selectbox("Filter by Level",
+                                                    ['All'] + list(user_df['User_level'].unique()))
+                    
+                    # Apply filters
+                    filtered_df = user_df.copy()
+                    
+                    if search_name:
+                        filtered_df = filtered_df[filtered_df['Name'].str.contains(search_name, case=False, na=False)]
+                    
+                    if filter_field != 'All':
+                        filtered_df = filtered_df[filtered_df['Predicted_Field'] == filter_field]
+                    
+                    if filter_level != 'All':
+                        filtered_df = filtered_df[filtered_df['User_level'] == filter_level]
+                    
+                    st.success(f"Found {len(filtered_df)} matching records")
+                    st.dataframe(filtered_df[['Name', 'Email_ID', 'resume_score', 'Predicted_Field', 
+                                             'User_level', 'Timestamp']], use_container_width=True)
+                    
+                    # Export Filtered Data
+                    if len(filtered_df) > 0:
+                        csv_filtered = filtered_df.to_csv(index=False)
+                        b64_filtered = base64.b64encode(csv_filtered.encode()).decode()
+                        href_filtered = f'<a href="data:file/csv;base64,{b64_filtered}" download="filtered_users.csv" style="color: #00C48C; font-weight: 600;">📥 Download Filtered Data</a>'
+                        st.markdown(href_filtered, unsafe_allow_html=True)
                     
                     # Feedback data
                     try:
